@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LittleWorld — state passes into state</title>
+<style>
+:root{color-scheme:dark;--bg:#071015;--panel:#0d1b22;--line:#1d3a45;--text:#e7f4f5;--muted:#9bb0b5;--hot:#ff6b6b;--cyan:#62d9e6;--gold:#ffd166;--green:#82e0aa}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#12303b 0,#071015 38%,#05090c 100%);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1220px;margin:auto;padding:24px}h1{font-size:clamp(34px,6vw,72px);line-height:.95;margin:14px 0 12px;letter-spacing:-.04em}h2{margin-top:0}.kicker{color:var(--cyan);letter-spacing:.14em;text-transform:uppercase;font-weight:700}.lead{max-width:900px;font-size:19px;color:#c8d7da}.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.8fr);gap:16px}.card{background:rgba(13,27,34,.92);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 16px 50px #0005}.worldwrap{position:relative}.world{width:100%;aspect-ratio:16/9;border:1px solid #24505c;border-radius:12px;background:#061016;display:block}.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.metric{background:#08151b;border:1px solid #17313a;padding:8px 10px;border-radius:10px}.metric b{display:block;font-size:20px}.metric span{color:var(--muted);font-size:12px}.controls{display:grid;gap:10px}.controls label{display:grid;gap:5px;color:var(--muted)}select,button,input{background:#071218;color:var(--text);border:1px solid #2c5360;border-radius:9px;padding:9px}button{cursor:pointer;font-weight:700}.legend{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin-top:12px;color:var(--muted);font-size:13px}.dot{width:12px;height:12px;border-radius:50%;margin-top:4px}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#061016;border:1px solid #17313a;padding:12px;border-radius:10px;overflow:auto}.results{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.barbox{min-width:0}.bar{height:160px;background:#071218;border:1px solid #17313a;border-radius:10px;display:flex;align-items:flex-end;padding:6px}.fill{width:100%;border-radius:6px 6px 4px 4px;background:linear-gradient(180deg,var(--cyan),#245a68);min-height:2px}.barbox.live .fill{background:linear-gradient(180deg,var(--green),#1d6540)}.barbox strong{display:block;margin-top:6px;font-size:13px}.barbox small{color:var(--muted)}.note{border-left:3px solid var(--gold);padding-left:12px;color:#d9d0aa}.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.pill{padding:7px 10px;border:1px solid #29515d;border-radius:999px;background:#071218}.arrow{color:var(--cyan);font-weight:900}.footer{color:var(--muted);font-size:13px;margin:28px 0 8px}a{color:#77e5f0}@media(max-width:850px){.grid{grid-template-columns:1fr}.results{grid-template-columns:repeat(2,1fr)}.hud{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body><main>
+<div class="kicker">LittleWorld / v0</div>
+<h1>State passes into state.</h1>
+<p class="lead">Twelve little systems live in one world. They sense locally, keep resident state, emit tiny marked events, change one another's future responses, move, and thereby change what happens next. There is no designed word vocabulary.</p>
+<div class="flow" aria-label="causal loop">
+  <span class="pill">sender history</span><span class="arrow">→</span><span class="pill">sender state</span><span class="arrow">→</span><span class="pill">3-number event</span><span class="arrow">→</span><span class="pill">receiver susceptibility</span><span class="arrow">→</span><span class="pill">behavior</span><span class="arrow">→</span><span class="pill">changed world</span>
+</div>
+
+<section class="grid" style="margin-top:18px">
+<div class="card worldwrap">
+<canvas id="world" class="world" width="960" height="540"></canvas>
+<div class="hud">
+ <div class="metric"><b id="captures">0</b><span>resource captures</span></div>
+ <div class="metric"><b id="events">0</b><span>events emitted</span></div>
+ <div class="metric"><b id="confidence">0.00</b><span>selected private confidence</span></div>
+ <div class="metric"><b id="susceptibility">0.00</b><span>selected receiver susceptibility</span></div>
+</div>
+</div>
+<div class="card controls">
+<h2>Closed-loop microscope</h2>
+<p style="color:var(--muted)">This animation is deliberately a <b>playground</b>, not the scientific receipt. The Python gate below is the matched comparison.</p>
+<label>Communication condition
+<select id="mode">
+<option value="live">LIVE + MARKED + STATEFUL</option>
+<option value="binary">BINARY — same event timing</option>
+<option value="yoked">YOKED — stale marked stream</option>
+<option value="scrambled">SCRAMBLED — time-misaligned marks</option>
+<option value="reset">RESET — no social persistence</option>
+</select></label>
+<label>Simulation speed <input id="speed" type="range" min="1" max="8" value="3"></label>
+<button id="restart">Restart same seed</button>
+<button id="newseed">New world seed</button>
+<div class="legend">
+ <span class="dot" style="background:var(--hot)"></span><span>resource; relocates after capture</span>
+ <span class="dot" style="background:var(--cyan)"></span><span>agent with current local sight</span>
+ <span class="dot" style="background:var(--gold)"></span><span>selected agent</span>
+ <span class="dot" style="background:#58717a"></span><span>agent relying on resident/social state</span>
+</div>
+<div class="formula">mark = Q · [private_x, private_y, confidence]\nreceiver Δsocial ∝ susceptibility(state) · Q⁻¹ mark</div>
+</div>
+</section>
+
+<section class="card" style="margin-top:16px">
+<h2>Gate 0 — matched hidden-world prediction</h2>
+<p>The evidence layer removes movement and uses one fixed hidden-world tape so every arm sees the same source state and event schedule. Score: MSE only on agent-ticks with <b>no direct observation right now</b>.</p>
+<div id="pending" class="note">Canonical seeds 200–211 were run after the protocol freeze. The machine-readable receipt is <a href="results/v0.json">results/v0.json</a>.</div>
+<div id="resultbars" class="results" style="margin-top:14px"></div>
+<p id="verdict" style="font-weight:800"></p>
+</section>
+
+<section class="grid" style="margin-top:16px">
+<div class="card"><h2>What v0 actually attacks</h2>
+<ul>
+<li><b>BINARY:</b> same events, no continuous state mark.</li>
+<li><b>YOKED:</b> same event schedule, marks from an independent world.</li>
+<li><b>SCRAMBLED:</b> exact live mark multiset, wrong emission times.</li>
+<li><b>RESET:</b> live marks, receiver social state erased each tick.</li>
+</ul>
+<p>The sender's private tape is generated before the arm is chosen, so a better result cannot come from giving LIVE different source observations.</p></div>
+<div class="card"><h2>What v0 does not establish</h2>
+<p>It does not show that biological spikes use these exact marks, that a receiver reconstructs a neuron's complete hidden state, that language emerges, or that evolution selected this circuit. The encoder/decoder compatibility is supplied. Later versions can make that relation learned and generational.</p>
+<p class="note">The supplied Gemini waveform demo is kept as motivation, not proof: its synthetic waveform features were explicitly written from the latent drive and then decoded.</p></div>
+</section>
+
+<div class="footer">MIT · <a href="https://github.com/anttiluode/LittleWorld">source repository</a> · scientific protocol: <a href="docs/PROTOCOL.md">docs/PROTOCOL.md</a></div>
+</main>
+<script>
+// Browser-only ecology. Evidence comes from the Python matched-world gate.
+const canvas=document.getElementById('world'), ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height,N=12,SENSE=115,CAPTURE=18,EMIT=18;
+let seed=23, tick=0, captures=0, events=0, agents=[], target={}, ripples=[], markHistory=[];
+function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+let rand=mulberry32(seed); function rr(a,b){return a+(b-a)*rand()}
+function wrap(v,m){v%=m;return v<0?v+m:v} function delta(a,b,m){let d=b-a;if(d>m/2)d-=m;if(d<-m/2)d+=m;return d}
+const Q=[[.36,-.81,.46],[.74,.54,.40],[-.57,.23,.79]]; // approximately orthonormal, deliberately non-identity
+function enc(v){return Q.map(r=>r[0]*v[0]+r[1]*v[1]+r[2]*v[2])}
+function dec(m){return [Q[0][0]*m[0]+Q[1][0]*m[1]+Q[2][0]*m[2],Q[0][1]*m[0]+Q[1][1]*m[1]+Q[2][1]*m[2],Q[0][2]*m[0]+Q[1][2]*m[1]+Q[2][2]*m[2]]}
+function placeTarget(){target={x:rr(50,W-50),y:rr(50,H-50)}}
+function restart(newSeed=false){if(newSeed)seed=(seed*1664525+1013904223)>>>0;rand=mulberry32(seed);tick=captures=events=0;ripples=[];markHistory=[];placeTarget();agents=[];for(let i=0;i<N;i++)agents.push({x:rr(0,W),y:rr(0,H),px:0,py:0,conf:0,sx:0,sy:0,seen:false,phase:rr(0,Math.PI*2)});updateHud()}
+function susceptibility(a){return 1/(1+Math.exp(7*(a.conf-.42)))}
+function torusTargetEstimate(a){return [wrap(a.x+delta(a.x,target.x,W),W)/W,wrap(a.y+delta(a.y,target.y,H),H)/H]}
+function step(){tick++; let mode=document.getElementById('mode').value;
+ // Local sensing updates only private state.
+ for(const a of agents){let dx=delta(a.x,target.x,W),dy=delta(a.y,target.y,H),d=Math.hypot(dx,dy);a.seen=d<SENSE;a.conf*=.965;if(a.seen){let est=torusTargetEstimate(a);a.px=.82*a.px+.18*est[0];a.py=.82*a.py+.18*est[1];a.conf=Math.min(1,a.conf+.13)}else{a.px*=.998;a.py*=.998} if(mode==='reset'){a.sx=a.sy=0}else{a.sx*=.94;a.sy*=.94}}
+ if(tick%EMIT===0){let frame=[];for(let i=0;i<N;i++){let a=agents[i],m=enc([a.px,a.py,a.conf]);frame.push(m);ripples.push({x:a.x,y:a.y,r:3,life:1});events++}markHistory.push(frame.map(x=>x.slice()));if(markHistory.length>80)markHistory.shift();
+   let chosen=frame;
+   if(mode==='binary')chosen=frame.map(()=>[0,0,0]);
+   else if(mode==='yoked' && markHistory.length>18)chosen=markHistory[0];
+   else if(mode==='scrambled' && markHistory.length>4){let old=markHistory[Math.floor(rand()*Math.max(1,markHistory.length-2))];chosen=old;}
+   let decoded=chosen.map(dec);
+   for(let r=0;r<N;r++){let sx=0,sy=0,sw=0;for(let s=0;s<N;s++)if(s!==r){let c=Math.max(0,Math.min(1,decoded[s][2]));sx+=decoded[s][0]*c;sy+=decoded[s][1]*c;sw+=c}if(sw>1e-5){let g=.16*susceptibility(agents[r]);agents[r].sx+=g*(sx/sw);agents[r].sy+=g*(sy/sw)}}
+ }
+ // Response drives behavior; movement changes future sensing. Captures change the shared world.
+ for(let i=0;i<N;i++){let a=agents[i],cw=a.conf,ex=cw*a.px+(1-cw)*a.sx,ey=cw*a.py+(1-cw)*a.sy;let tx=ex*W,ty=ey*H,dx=delta(a.x,tx,W),dy=delta(a.y,ty,H),n=Math.hypot(dx,dy)+1e-6;let jitter=.24*Math.sin(tick*.035+a.phase);a.x=wrap(a.x+2.15*dx/n+jitter,W);a.y=wrap(a.y+2.15*dy/n-jitter*.5,H);if(Math.hypot(delta(a.x,target.x,W),delta(a.y,target.y,H))<CAPTURE){captures++;placeTarget();for(const q of agents)q.conf*=.45;break}}
+ for(const p of ripples){p.r+=5;p.life-=.045}ripples=ripples.filter(p=>p.life>0);updateHud();
+}
+function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#061016';ctx.fillRect(0,0,W,H);
+ // subtle grid
+ ctx.strokeStyle='#0d2730';ctx.lineWidth=1;for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+ ctx.strokeStyle='rgba(255,107,107,.18)';ctx.beginPath();ctx.arc(target.x,target.y,SENSE,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.arc(target.x,target.y,9,0,Math.PI*2);ctx.fill();
+ for(const p of ripples){ctx.strokeStyle=`rgba(98,217,230,${p.life*.55})`;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.stroke()}
+ for(let i=0;i<N;i++){let a=agents[i];ctx.fillStyle=i===0?'#ffd166':(a.seen?'#62d9e6':'#58717a');ctx.beginPath();ctx.arc(a.x,a.y,i===0?7:5,0,Math.PI*2);ctx.fill();if(i===0){ctx.strokeStyle='#ffd16655';ctx.beginPath();ctx.arc(a.x,a.y,18,0,Math.PI*2);ctx.stroke()}}
+ ctx.fillStyle='#8ea5aa';ctx.font='13px system-ui';ctx.fillText(`seed ${seed} · tick ${tick} · torus edges wrap`,12,22);
+}
+function updateHud(){document.getElementById('captures').textContent=captures;document.getElementById('events').textContent=events;let a=agents[0]||{conf:0};document.getElementById('confidence').textContent=a.conf.toFixed(2);document.getElementById('susceptibility').textContent=susceptibility(a).toFixed(2)}
+function loop(){let k=+document.getElementById('speed').value;for(let i=0;i<k;i++)step();draw();requestAnimationFrame(loop)}
+document.getElementById('restart').onclick=()=>restart(false);document.getElementById('newseed').onclick=()=>restart(true);document.getElementById('mode').onchange=()=>restart(false);restart();loop();
+
+// Canonical frozen receipt: seeds 200–211.
+const canonical={"rows":[{"key":"live","label":"LIVE","mse":0.3099762412352058},{"key":"binary","label":"BINARY","mse":0.4431834330722072},{"key":"yoked","label":"YOKED","mse":0.469055837706509},{"key":"scrambled","label":"SCRAMBLED","mse":0.4382382603855659},{"key":"reset","label":"RESET","mse":0.425063101323275}],"verdict":"PASS — live marked stateful beat every frozen control on 12/12 canonical seeds."};
+function renderResults(){const el=document.getElementById('resultbars');if(!canonical){el.innerHTML='';return;}document.getElementById('pending').style.display='none';let max=Math.max(...canonical.rows.map(r=>r.mse));for(const r of canonical.rows){let box=document.createElement('div');box.className='barbox '+(r.key==='live'?'live':'');box.innerHTML=`<div class="bar"><div class="fill" style="height:${Math.max(2,100*r.mse/max)}%"></div></div><strong>${r.label}</strong><small>MSE ${r.mse.toFixed(4)}</small>`;el.appendChild(box)}document.getElementById('verdict').textContent=canonical.verdict}
+renderResults();
+</script></body></html>
