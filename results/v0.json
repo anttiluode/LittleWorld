@@ -1,0 +1,146 @@
+{
+  "claim_boundary": "constructed proof-of-mechanism: state-dependent marked sender events plus receiver memory improve hidden-world prediction under matched event budgets",
+  "experiment": "littleworld-v0-marked-event-coupling",
+  "gate": {
+    "checks": {
+      "improvement_vs_live_binary_stateful": true,
+      "improvement_vs_live_marked_reset": true,
+      "improvement_vs_scrambled_marked_stateful": true,
+      "improvement_vs_yoked_marked_stateful": true,
+      "matched_event_budget": true,
+      "paired_wins_vs_live_binary_stateful": true,
+      "paired_wins_vs_live_marked_reset": true,
+      "paired_wins_vs_scrambled_marked_stateful": true,
+      "paired_wins_vs_yoked_marked_stateful": true
+    },
+    "pass": true,
+    "thresholds": {
+      "matched_event_budget": true,
+      "minimum_paired_seed_wins": "9/12",
+      "minimum_relative_improvement": {
+        "live_binary_stateful": 0.2,
+        "live_marked_reset": 0.1,
+        "scrambled_marked_stateful": 0.15,
+        "yoked_marked_stateful": 0.15
+      }
+    }
+  },
+  "panel": {
+    "arms": [
+      "live_marked_stateful",
+      "live_binary_stateful",
+      "yoked_marked_stateful",
+      "scrambled_marked_stateful",
+      "live_marked_reset"
+    ],
+    "config": {
+      "angle_noise": 0.045,
+      "confidence_decay": 0.94,
+      "emit_period": 4,
+      "jump_probability": 0.018,
+      "mark_noise": 0.04,
+      "n_agents": 12,
+      "observation_noise": 0.35,
+      "observation_probability": 0.28,
+      "private_decay": 0.9,
+      "social_decay": 0.9,
+      "social_gain": 0.55,
+      "steps": 1200
+    },
+    "runs": {
+      "live_binary_stateful": [
+        {"arm":"live_binary_stateful","blind_mse":0.44391537598379277,"evaluated_agent_ticks":10376,"events":3600,"seed":200},
+        {"arm":"live_binary_stateful","blind_mse":0.44290028560339806,"evaluated_agent_ticks":10351,"events":3600,"seed":201},
+        {"arm":"live_binary_stateful","blind_mse":0.4454795726758205,"evaluated_agent_ticks":10381,"events":3600,"seed":202},
+        {"arm":"live_binary_stateful","blind_mse":0.44722939816014246,"evaluated_agent_ticks":10382,"events":3600,"seed":203},
+        {"arm":"live_binary_stateful","blind_mse":0.44105947455204253,"evaluated_agent_ticks":10337,"events":3600,"seed":204},
+        {"arm":"live_binary_stateful","blind_mse":0.4447809507032024,"evaluated_agent_ticks":10371,"events":3600,"seed":205},
+        {"arm":"live_binary_stateful","blind_mse":0.4400433179653769,"evaluated_agent_ticks":10353,"events":3600,"seed":206},
+        {"arm":"live_binary_stateful","blind_mse":0.4394190687338572,"evaluated_agent_ticks":10220,"events":3600,"seed":207},
+        {"arm":"live_binary_stateful","blind_mse":0.43950564120029517,"evaluated_agent_ticks":10278,"events":3600,"seed":208},
+        {"arm":"live_binary_stateful","blind_mse":0.4415372194774986,"evaluated_agent_ticks":10363,"events":3600,"seed":209},
+        {"arm":"live_binary_stateful","blind_mse":0.4434665805410163,"evaluated_agent_ticks":10414,"events":3600,"seed":210},
+        {"arm":"live_binary_stateful","blind_mse":0.4449660702091226,"evaluated_agent_ticks":10353,"events":3600,"seed":211}
+      ],
+      "live_marked_reset": [
+        {"arm":"live_marked_reset","blind_mse":0.42631193800151035,"evaluated_agent_ticks":10376,"events":3600,"seed":200},
+        {"arm":"live_marked_reset","blind_mse":0.4250117854241161,"evaluated_agent_ticks":10351,"events":3600,"seed":201},
+        {"arm":"live_marked_reset","blind_mse":0.428269339465813,"evaluated_agent_ticks":10381,"events":3600,"seed":202},
+        {"arm":"live_marked_reset","blind_mse":0.4302738866475413,"evaluated_agent_ticks":10382,"events":3600,"seed":203},
+        {"arm":"live_marked_reset","blind_mse":0.42310838807755463,"evaluated_agent_ticks":10337,"events":3600,"seed":204},
+        {"arm":"live_marked_reset","blind_mse":0.42765905034098006,"evaluated_agent_ticks":10371,"events":3600,"seed":205},
+        {"arm":"live_marked_reset","blind_mse":0.42157371035726643,"evaluated_agent_ticks":10353,"events":3600,"seed":206},
+        {"arm":"live_marked_reset","blind_mse":0.4214850951098574,"evaluated_agent_ticks":10220,"events":3600,"seed":207},
+        {"arm":"live_marked_reset","blind_mse":0.42086487642214643,"evaluated_agent_ticks":10278,"events":3600,"seed":208},
+        {"arm":"live_marked_reset","blind_mse":0.42360569938692766,"evaluated_agent_ticks":10363,"events":3600,"seed":209},
+        {"arm":"live_marked_reset","blind_mse":0.4251144172224339,"evaluated_agent_ticks":10414,"events":3600,"seed":210},
+        {"arm":"live_marked_reset","blind_mse":0.42808226837280255,"evaluated_agent_ticks":10353,"events":3600,"seed":211}
+      ],
+      "live_marked_stateful": [
+        {"arm":"live_marked_stateful","blind_mse":0.3171138376458401,"evaluated_agent_ticks":10376,"events":3600,"seed":200},
+        {"arm":"live_marked_stateful","blind_mse":0.3121366323793408,"evaluated_agent_ticks":10351,"events":3600,"seed":201},
+        {"arm":"live_marked_stateful","blind_mse":0.3244485279780783,"evaluated_agent_ticks":10381,"events":3600,"seed":202},
+        {"arm":"live_marked_stateful","blind_mse":0.3306249032392748,"evaluated_agent_ticks":10382,"events":3600,"seed":203},
+        {"arm":"live_marked_stateful","blind_mse":0.30463410451358514,"evaluated_agent_ticks":10337,"events":3600,"seed":204},
+        {"arm":"live_marked_stateful","blind_mse":0.31879718254933587,"evaluated_agent_ticks":10371,"events":3600,"seed":205},
+        {"arm":"live_marked_stateful","blind_mse":0.29840975042098067,"evaluated_agent_ticks":10353,"events":3600,"seed":206},
+        {"arm":"live_marked_stateful","blind_mse":0.30781585009107076,"evaluated_agent_ticks":10220,"events":3600,"seed":207},
+        {"arm":"live_marked_stateful","blind_mse":0.298752055356146,"evaluated_agent_ticks":10278,"events":3600,"seed":208},
+        {"arm":"live_marked_stateful","blind_mse":0.3048704051822613,"evaluated_agent_ticks":10363,"events":3600,"seed":209},
+        {"arm":"live_marked_stateful","blind_mse":0.30670629880961003,"evaluated_agent_ticks":10414,"events":3600,"seed":210},
+        {"arm":"live_marked_stateful","blind_mse":0.32187538413662803,"evaluated_agent_ticks":10353,"events":3600,"seed":211}
+      ],
+      "scrambled_marked_stateful": [
+        {"arm":"scrambled_marked_stateful","blind_mse":0.44724473011227156,"evaluated_agent_ticks":10376,"events":3600,"seed":200},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.44092546749453915,"evaluated_agent_ticks":10351,"events":3600,"seed":201},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4435136767034073,"evaluated_agent_ticks":10381,"events":3600,"seed":202},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4378175503129522,"evaluated_agent_ticks":10382,"events":3600,"seed":203},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.43865897045817964,"evaluated_agent_ticks":10337,"events":3600,"seed":204},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.44192039785873494,"evaluated_agent_ticks":10371,"events":3600,"seed":205},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4419302290691302,"evaluated_agent_ticks":10353,"events":3600,"seed":206},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4353773707093475,"evaluated_agent_ticks":10220,"events":3600,"seed":207},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.41042024452893,"evaluated_agent_ticks":10278,"events":3600,"seed":208},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4336578483948571,"evaluated_agent_ticks":10363,"events":3600,"seed":209},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4365807660909633,"evaluated_agent_ticks":10414,"events":3600,"seed":210},
+        {"arm":"scrambled_marked_stateful","blind_mse":0.4263573871407393,"evaluated_agent_ticks":10353,"events":3600,"seed":211}
+      ],
+      "yoked_marked_stateful": [
+        {"arm":"yoked_marked_stateful","blind_mse":0.5119366609132951,"evaluated_agent_ticks":10376,"events":3600,"seed":200},
+        {"arm":"yoked_marked_stateful","blind_mse":0.43489599246944055,"evaluated_agent_ticks":10351,"events":3600,"seed":201},
+        {"arm":"yoked_marked_stateful","blind_mse":0.489740721344255,"evaluated_agent_ticks":10381,"events":3600,"seed":202},
+        {"arm":"yoked_marked_stateful","blind_mse":0.43944768550096447,"evaluated_agent_ticks":10382,"events":3600,"seed":203},
+        {"arm":"yoked_marked_stateful","blind_mse":0.45845337289342947,"evaluated_agent_ticks":10337,"events":3600,"seed":204},
+        {"arm":"yoked_marked_stateful","blind_mse":0.4812306064313878,"evaluated_agent_ticks":10371,"events":3600,"seed":205},
+        {"arm":"yoked_marked_stateful","blind_mse":0.4269144774351342,"evaluated_agent_ticks":10353,"events":3600,"seed":206},
+        {"arm":"yoked_marked_stateful","blind_mse":0.4796583025195885,"evaluated_agent_ticks":10220,"events":3600,"seed":207},
+        {"arm":"yoked_marked_stateful","blind_mse":0.5152079922391795,"evaluated_agent_ticks":10278,"events":3600,"seed":208},
+        {"arm":"yoked_marked_stateful","blind_mse":0.497873297943579,"evaluated_agent_ticks":10363,"events":3600,"seed":209},
+        {"arm":"yoked_marked_stateful","blind_mse":0.4129542877213854,"evaluated_agent_ticks":10414,"events":3600,"seed":210},
+        {"arm":"yoked_marked_stateful","blind_mse":0.4506279288351331,"evaluated_agent_ticks":10353,"events":3600,"seed":211}
+      ]
+    },
+    "seeds": [200,201,202,203,204,205,206,207,208,209,210,211]
+  },
+  "summary": {
+    "comparisons_to_live": {
+      "live_binary_stateful": {"median_relative_improvement":0.2973688240433067,"paired_seed_wins":12,"seed_count":12},
+      "live_marked_reset": {"median_relative_improvement":0.2676343457064816,"paired_seed_wins":12,"seed_count":12},
+      "scrambled_marked_stateful": {"median_relative_improvement":0.29152440252194106,"paired_seed_wins":12,"seed_count":12},
+      "yoked_marked_stateful": {"median_relative_improvement":0.33651369979032086,"paired_seed_wins":12,"seed_count":12}
+    },
+    "event_counts": {
+      "live_binary_stateful": [3600],
+      "live_marked_reset": [3600],
+      "live_marked_stateful": [3600],
+      "scrambled_marked_stateful": [3600],
+      "yoked_marked_stateful": [3600]
+    },
+    "median_blind_mse": {
+      "live_binary_stateful": 0.4431834330722072,
+      "live_marked_reset": 0.425063101323275,
+      "live_marked_stateful": 0.3099762412352058,
+      "scrambled_marked_stateful": 0.4382382603855659,
+      "yoked_marked_stateful": 0.469055837706509
+    }
+  }
+}
