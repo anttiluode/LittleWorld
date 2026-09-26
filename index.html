@@ -55,7 +55,7 @@ main{max-width:1220px;margin:auto;padding:24px}h1{font-size:clamp(34px,6vw,72px)
 <section class="card" style="margin-top:16px">
 <h2>Gate 0 — matched hidden-world prediction</h2>
 <p>The evidence layer removes movement and uses one fixed hidden-world tape so every arm sees the same source state and event schedule. Score: MSE only on agent-ticks with <b>no direct observation right now</b>.</p>
-<div id="pending" class="note">Canonical receipt pending on this branch. The protocol is frozen in <code>docs/PROTOCOL.md</code> before seeds 200–211 are run.</div>
+<div id="pending" class="note">Canonical seeds 200–211 were run after the protocol freeze. The machine-readable receipt is <a href="results/v0.json">results/v0.json</a>.</div>
 <div id="resultbars" class="results" style="margin-top:14px"></div>
 <p id="verdict" style="font-weight:800"></p>
 </section>
@@ -118,8 +118,8 @@ function updateHud(){document.getElementById('captures').textContent=captures;do
 function loop(){let k=+document.getElementById('speed').value;for(let i=0;i<k;i++)step();draw();requestAnimationFrame(loop)}
 document.getElementById('restart').onclick=()=>restart(false);document.getElementById('newseed').onclick=()=>restart(true);document.getElementById('mode').onchange=()=>restart(false);restart();loop();
 
-// Filled in by the post-freeze receipt commit.
-const canonical=null;
+// Canonical frozen receipt: seeds 200–211.
+const canonical={"rows":[{"key":"live","label":"LIVE","mse":0.3099762412352058},{"key":"binary","label":"BINARY","mse":0.4431834330722072},{"key":"yoked","label":"YOKED","mse":0.469055837706509},{"key":"scrambled","label":"SCRAMBLED","mse":0.4382382603855659},{"key":"reset","label":"RESET","mse":0.425063101323275}],"verdict":"PASS — live marked stateful beat every frozen control on 12/12 canonical seeds."};
 function renderResults(){const el=document.getElementById('resultbars');if(!canonical){el.innerHTML='';return;}document.getElementById('pending').style.display='none';let max=Math.max(...canonical.rows.map(r=>r.mse));for(const r of canonical.rows){let box=document.createElement('div');box.className='barbox '+(r.key==='live'?'live':'');box.innerHTML=`<div class="bar"><div class="fill" style="height:${Math.max(2,100*r.mse/max)}%"></div></div><strong>${r.label}</strong><small>MSE ${r.mse.toFixed(4)}</small>`;el.appendChild(box)}document.getElementById('verdict').textContent=canonical.verdict}
 renderResults();
 </script></body></html>
