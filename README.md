@@ -1,5 +1,7 @@
 # LittleWorld
 
+![pic](pic.png)
+
 **A tiny artificial ecology for asking one narrow question:** what happens when a stateful system emits a small state-dependent event into another stateful system, and the receiver's present state changes what that event does?
 
 The working abstraction is:
