@@ -35,6 +35,22 @@ pytest
 python scripts/run_v0.py --out results/v0.json
 ```
 
+## Canonical v0 result — seeds 200–211
+
+The protocol above was committed before the canonical panel was run. The frozen gate **passed** without changing the model or thresholds afterward.
+
+| Arm | Median blind MSE ↓ | Live relative improvement | Paired live wins |
+|---|---:|---:|---:|
+| LIVE + marked + stateful | **0.3100** | — | — |
+| Binary | 0.4432 | **29.7%** | **12/12** |
+| Yoked | 0.4691 | **33.7%** | **12/12** |
+| Scrambled | 0.4382 | **29.2%** | **12/12** |
+| Reset receiver | 0.4251 | **26.8%** | **12/12** |
+
+Every communicating arm emitted exactly **3,600 events per seed**. Full machine-readable receipt: [`results/v0.json`](results/v0.json).
+
+This is a positive result for the **constructed mechanism**, not evidence that biology or culture uses this exact encoding. In particular, v0 supplies a compatible encoder/decoder rather than learning one.
+
 ## Live microscope
 
 The repository is configured for static GitHub Pages:
